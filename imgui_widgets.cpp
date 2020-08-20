@@ -6020,7 +6020,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     const bool was_selected = selected;
 
     // Multi-selection support (header)
-    const bool is_multi_select = g.MultiSelectEnabled;
+    const bool is_multi_select = (g.MultiSelectEnabledWindow == window);
     if (is_multi_select)
     {
         MultiSelectItemHeader(id, &selected);
@@ -6353,7 +6353,7 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     if (flags & ImGuiSelectableFlags_AllowItemOverlap)  { button_flags |= ImGuiButtonFlags_AllowItemOverlap; }
 
     // Multi-selection support (header)
-    const bool is_multi_select = g.MultiSelectEnabled;
+    const bool is_multi_select = (g.MultiSelectEnabledWindow == window);
     const bool was_selected = selected;
     if (is_multi_select)
     {
@@ -6473,7 +6473,7 @@ ImGuiMultiSelectData* ImGui::BeginMultiSelect(ImGuiMultiSelectFlags flags, void*
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
 
-    IM_ASSERT(g.MultiSelectEnabled == false);   // No recursion allowed yet (we could allow it if we deem it useful)
+    IM_ASSERT(g.MultiSelectEnabledWindow == NULL);   // No recursion allowed yet (we could allow it if we deem it useful)
     IM_ASSERT(g.MultiSelectFlags == 0);
     IM_ASSERT(g.MultiSelectState.FocusScopeId == 0);
 
@@ -6482,7 +6482,7 @@ ImGuiMultiSelectData* ImGui::BeginMultiSelect(ImGuiMultiSelectFlags flags, void*
     state->Clear();
     state->BackupFocusScopeId = window->DC.NavFocusScopeIdCurrent;
     state->FocusScopeId = window->DC.NavFocusScopeIdCurrent = window->IDStack.back(); // == PushFocusScope()
-    g.MultiSelectEnabled = true;
+    g.MultiSelectEnabledWindow = window;
     g.MultiSelectFlags = flags;
 
     // Use copy of keyboard mods at the time of the request, otherwise we would requires mods to be held for an extra frame.
@@ -6532,7 +6532,7 @@ ImGuiMultiSelectData* ImGui::EndMultiSelect()
         state->Out.RangeValue = true;
     g.MultiSelectState.FocusScopeId = 0;
     window->DC.NavFocusScopeIdCurrent = g.MultiSelectState.BackupFocusScopeId; // == PopFocusScope()
-    g.MultiSelectEnabled = false;
+    g.MultiSelectEnabledWindow = NULL;
     g.MultiSelectFlags = ImGuiMultiSelectFlags_None;
 
 #ifdef IMGUI_DEBUG_MULTISELECT
