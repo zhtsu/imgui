@@ -2322,14 +2322,20 @@ bool ImGui::DragScalar(ImStrv label, ImGuiDataType data_type, void* p_data, floa
         return false;
 
     // FIXME-IMSTR
-    char format_0[64];  // format may not end with \0
-    const char* format = format_0;
-    IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_0));
-    ImStrncpy(format_0, format_p, IM_ARRAYSIZE(format_0));
-
-    // Default format string when passing NULL
+    const char* format;
+    char format_buf[64];
     if (!format_p)
+    {
+        // Default format string when passing NULL
         format = DataTypeGetInfo(data_type)->PrintFmt;
+    }
+    else
+    {
+        // Copy format string (format may not be zero-terminated)
+        format = format_buf;
+        IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_buf));
+        ImStrncpy(format_buf, format_p, IM_ARRAYSIZE(format_buf));
+    }
 
     const bool hovered = ItemHoverable(frame_bb, id);
     bool temp_input_is_active = temp_input_allowed && TempInputIsActive(id);
@@ -2921,13 +2927,20 @@ bool ImGui::SliderScalar(ImStrv label, ImGuiDataType data_type, void* p_data, co
         return false;
 
     // FIXME-IMSTR
-    char format_0[64];  // format may not end with \0
-    const char* format = format_0;
-    IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_0));
-
-    // Default format string when passing NULL
+    const char* format;
+    char format_buf[64];
     if (!format_p)
+    {
+        // Default format string when passing NULL
         format = DataTypeGetInfo(data_type)->PrintFmt;
+    }
+    else
+    {
+        // Copy format string (format may not be zero-terminated)
+        format = format_buf;
+        IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_buf));
+        ImStrncpy(format_buf, format_p, IM_ARRAYSIZE(format_buf));
+    }
 
     const bool hovered = ItemHoverable(frame_bb, id);
     bool temp_input_is_active = temp_input_allowed && TempInputIsActive(id);
@@ -3091,13 +3104,20 @@ bool ImGui::VSliderScalar(ImStrv label, const ImVec2& size, ImGuiDataType data_t
         return false;
 
     // FIXME-IMSTR
-    char format_0[64];  // format may not end with \0
-    const char* format = format_0;
-    IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_0));
-
-    // Default format string when passing NULL
+    const char* format;
+    char format_buf[64];
     if (!format_p)
+    {
+        // Default format string when passing NULL
         format = DataTypeGetInfo(data_type)->PrintFmt;
+    }
+    else
+    {
+        // Copy format string (format may not be zero-terminated)
+        format = format_buf;
+        IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_buf));
+        ImStrncpy(format_buf, format_p, IM_ARRAYSIZE(format_buf));
+    }
 
     const bool hovered = ItemHoverable(frame_bb, id);
     if ((hovered && g.IO.MouseClicked[0]) || g.NavActivateId == id || g.NavActivateInputId == id)
@@ -3371,13 +3391,20 @@ bool ImGui::InputScalar(ImStrv label, ImGuiDataType data_type, void* p_data, con
     ImGuiStyle& style = g.Style;
 
     // FIXME-IMSTR
-    char format_0[64];  // format may not end with \0
-    const char* format = format_0;
-    IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_0));
-    ImStrncpy(format_0, format_p, IM_ARRAYSIZE(format_0));
-
+    const char* format;
+    char format_buf[64];
     if (!format_p)
+    {
+        // Default format string when passing NULL
         format = DataTypeGetInfo(data_type)->PrintFmt;
+    }
+    else
+    {
+        // Copy format string (format may not be zero-terminated)
+        format = format_buf;
+        IM_ASSERT(format_p.End - format_p.Begin < IM_ARRAYSIZE(format_buf));
+        ImStrncpy(format_buf, format_p, IM_ARRAYSIZE(format_buf));
+    }
 
     char buf[64];
     DataTypeFormatString(buf, IM_ARRAYSIZE(buf), data_type, p_data, format);
