@@ -250,6 +250,26 @@ void ImGui::ShowDemoWindow(bool* p_open)
     // Most functions would normally just crash if the context is missing.
     IM_ASSERT(ImGui::GetCurrentContext() != NULL && "Missing dear imgui context. Refer to examples app!");
 
+#if 1
+    ImGui::Begin("#3795 - Window A");
+    for (int n = 0; n < 10; n++)
+        ImGui::Text("%*s some contents", n, "");
+    ImGui::BeginChild("Child B", ImVec2(0.0f, 200.0f), true);
+    ImGui::Text("this is a long line of text. this is a long line of text. this is a long line of text. this is a long line of text. ");
+    ImGui::EndChild();
+    for (int n = 0; n < 10; n++)
+        ImGui::Text("%*s some contents", n, "");
+    ImGui::End();
+
+    ImGui::Begin("#4559");
+    ImGui::Text("Parent");
+    ImGui::BeginChild("Child", ImVec2(0, 0), true);
+    for (int n = 0; n < 10; n++)
+        ImGui::Text("%*sthis is a long line of text. this is a long line of text. this is a long line of text. this is a long line of text. ", n * 2, "");
+    ImGui::EndChild();
+    ImGui::End();
+#endif
+
     // Examples Apps (accessible from the "Examples" menu)
     static bool show_app_main_menu_bar = false;
     static bool show_app_documents = false;
